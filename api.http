@@ -1,0 +1,34 @@
+@host=http://localhost:3000
+
+###
+POST {{host}}/api/auth/sign-in
+Content-Type: application/json
+
+{
+    "username":"Aurelia_Bode@yahoo.com",
+    "password":"use1"
+}
+
+
+###
+GET {{host}}/api/auth/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkF1cmVsaWFfQm9kZUB5YWhvby5jb20ifQ.MPvVd0xfNI0Td60AJY4eNCLrtN1SeNgCWrB0kNI9ioY
+
+###
+GET {{host}}/api/users
+
+###
+GET {{host}}/api/users/2001
+
+
+###
+POST {{host}}/api/users
+Content-Type: application/json
+
+{
+    "fullName":"sagar",
+    "password":"use1",
+    "email":"sagar5@gmail.com",
+    "roles":"admin",
+    "phone":"99-999-999"
+}
