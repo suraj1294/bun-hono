@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  app:
+    restart: "always"
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    command: bun dev
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://todoapp:todo123@postgres/todos
+  postgres:
+    image: postgres:15-alpine
+    restart: "always"
+    environment:
+      POSTGRES_PASSWORD: todo123
+      POSTGRES_USER: todoapp
+      POSTGRES_DB: todos
