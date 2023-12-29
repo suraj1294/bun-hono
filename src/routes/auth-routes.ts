@@ -45,11 +45,11 @@ authRoutes.post("/login", vValidator("json", authSchema), async (c) => {
 
       setCookie(c, "__Session", token, {
         path: "/",
-        secure: true,
+        secure: process.env.NODE_ENV === "production",
         httpOnly: true,
         maxAge: 1000,
         expires: new Date(Date.UTC(2000, 11, 24, 10, 30, 59, 900)),
-        sameSite: "Strict",
+        sameSite: "None",
       });
 
       return c.json({ ok: true, data: token });
