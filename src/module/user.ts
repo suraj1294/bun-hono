@@ -2,11 +2,14 @@ import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { db } from "@/utils/db";
+import { getHash } from "@/utils/encryption";
 
 class User {
   constructor(private readonly db: NodePgDatabase<typeof schema>) {}
 
   async addUser(user: schema.NewUser) {
+    user.password = await getHash(user.password);
+
     return this.db
       .insert(schema.users)
       .values(user)
