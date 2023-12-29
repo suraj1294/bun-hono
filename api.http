@@ -1,28 +1,31 @@
 @host=http://localhost:3000
 
+@remote=http://localhost:3000
+#https://bunhono-nqw9skkk.b4a.run/
+
 ###
-POST {{host}}/api/auth/sign-in
+POST {{remote}}/api/auth/login
 Content-Type: application/json
 
 {
-    "username":"Aurelia_Bode@yahoo.com",
+    "username":"Amie58@yahoo.com",
     "password":"use1"
 }
 
 
 ###
-GET {{host}}/api/auth/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkF1cmVsaWFfQm9kZUB5YWhvby5jb20ifQ.MPvVd0xfNI0Td60AJY4eNCLrtN1SeNgCWrB0kNI9ioY
+GET {{remote}}/api/auth/me
+Cookie: 
 
 ###
-GET {{host}}/api/users
+GET {{remote}}/api/users
 
 ###
-GET {{host}}/api/users/2001
+GET {{remote}}/api/users/2001
 
 
 ###
-POST {{host}}/api/users
+POST {{remote}}/api/users
 Content-Type: application/json
 
 {

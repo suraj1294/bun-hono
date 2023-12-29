@@ -1,17 +1,7 @@
-import { db } from "@/utils/db";
 import { vValidator } from "@hono/valibot-validator";
-import { eq } from "drizzle-orm";
 import { Hono } from "hono";
-import { object, string } from "valibot";
-import { insertUserSchema, users } from "../drizzle/schema";
-import { compareHash } from "@/utils/encryption";
-import { sign } from "hono/jwt";
+import { insertUserSchema } from "../drizzle/schema";
 import userService from "../module/user";
-
-const authSchema = object({
-  username: string(),
-  password: string(),
-});
 
 const userApp = new Hono().basePath("/users");
 

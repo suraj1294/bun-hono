@@ -5,8 +5,9 @@ import { object, string } from "valibot";
 import { users } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { compareHash } from "@/utils/encryption";
-import { sign } from "hono/jwt";
+import { sign, verify } from "hono/jwt";
 import { jwtMiddleware } from "../middleware/auth-jwt";
+import { setCookie, getCookie } from "hono/cookie";
 
 const authSchema = object({
   username: string(),
@@ -15,7 +16,7 @@ const authSchema = object({
 
 const authRoutes = new Hono().basePath("/auth");
 
-authRoutes.post("/sign-in", vValidator("json", authSchema), async (c) => {
+authRoutes.post("/login", vValidator("json", authSchema), async (c) => {
   const body = c.req.valid("json");
 
   //check if user exists
@@ -32,10 +33,25 @@ authRoutes.post("/sign-in", vValidator("json", authSchema), async (c) => {
     const res = await compareHash(body.password, user.password);
 
     if (res) {
-      const token = await sign(
-        { username: body.username },
-        process.env.JWT_SECRET as string
-      );
+      const expiresAt = Math.floor(Date.now() / 1000) + 15 * 60; //15 minute
+
+      const payload = {
+        sub: user.email,
+        role: user.role,
+        exp: expiresAt,
+      };
+
+      const token = await sign(payload, process.env.JWT_SECRET as string);
+
+      setCookie(c, "__Session", token, {
+        path: "/",
+        secure: true,
+        httpOnly: true,
+        maxAge: 1000,
+        expires: new Date(Date.UTC(2000, 11, 24, 10, 30, 59, 900)),
+        sameSite: "Strict",
+      });
+
       return c.json({ ok: true, data: token });
     } else {
       return c.json(
@@ -48,10 +64,22 @@ authRoutes.post("/sign-in", vValidator("json", authSchema), async (c) => {
   }
 });
 
-authRoutes.get("/me", jwtMiddleware, (c) => {
-  const payload = c.get("jwtPayload");
+authRoutes.get("/me", async (c) => {
+  const token = getCookie(c, "__Session");
 
-  return c.json({ ok: true, data: payload });
+  if (token) {
+    try {
+      const payload = await verify(token, process.env.JWT_SECRET as string);
+
+      return c.json(payload);
+    } catch (e: any) {
+      console.log(e?.name);
+      return c.json({ ok: "false", message: "unauthorized" }, 401);
+    }
+  } else {
+    console.log("here");
+    return c.json({ ok: "false", message: "unauthorized" }, 401);
+  }
 });
 
 export default authRoutes;
