@@ -18,35 +18,35 @@ const userApp = new Hono().basePath("/users");
 userApp.get("/", async (c) => {
   const allUsers = await userService.getAll();
 
-  return c.json(allUsers);
+  return c.json({ ok: true, data: allUsers });
 });
 
 userApp.get("/:userId", async (c) => {
   const { userId } = c.req.param();
 
   if (Number.isNaN(+userId)) {
-    return c.json({ message: "bad request" }, 400);
+    return c.json({ ok: false, message: "bad request" }, 400);
   }
 
   const user = await userService.getById(+userId);
 
   if (!user) {
-    return c.json({ message: "user not found!" }, 404);
+    return c.json({ ok: false, message: "user not found!" }, 404);
   }
 
-  return c.json(user);
+  return c.json({ ok: true, data: user });
 });
 
 userApp.post("/", vValidator("json", insertUserSchema), async (c) => {
   const data = c.req.valid("json");
 
   if (await userService.checkUser(data.email)) {
-    return c.json({ message: "user already exist" }, 400);
+    return c.json({ ok: false, message: "user already exist" }, 400);
   }
 
   const userAdded = await userService.addUser(data);
 
-  return c.json(userAdded[0]);
+  return c.json({ ok: true, data: userAdded[0] });
 });
 
 export default userApp;

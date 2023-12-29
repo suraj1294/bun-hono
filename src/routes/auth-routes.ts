@@ -24,7 +24,7 @@ authRoutes.post("/sign-in", vValidator("json", authSchema), async (c) => {
   });
 
   if (!user) {
-    return c.json({ ok: "false", message: "not found!" }, 404);
+    return c.json({ ok: false, message: "not found!" }, 404);
   }
 
   // check if password is correct
@@ -36,7 +36,7 @@ authRoutes.post("/sign-in", vValidator("json", authSchema), async (c) => {
         { username: body.username },
         process.env.JWT_SECRET as string
       );
-      return c.json({ ok: "true", data: token });
+      return c.json({ ok: true, data: token });
     } else {
       return c.json(
         { ok: "false", message: "username or password doesn't match" },
@@ -44,14 +44,14 @@ authRoutes.post("/sign-in", vValidator("json", authSchema), async (c) => {
       );
     }
   } catch (e) {
-    return c.json({ ok: "false", message: "server error" }, 500);
+    return c.json({ ok: false, message: "server error" }, 500);
   }
 });
 
 authRoutes.get("/me", jwtMiddleware, (c) => {
   const payload = c.get("jwtPayload");
 
-  return c.json(payload);
+  return c.json({ ok: true, data: payload });
 });
 
 export default authRoutes;
