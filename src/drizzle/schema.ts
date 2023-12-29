@@ -5,11 +5,14 @@ import {
   timestamp,
   uniqueIndex,
   varchar,
+  pgSchema,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-valibot";
 import { number, parse, string } from "valibot";
 
-export const users = pgTable(
+export const dbSchema = pgSchema("bun");
+
+export const users = dbSchema.table(
   "users",
   {
     id: serial("id").primaryKey(),

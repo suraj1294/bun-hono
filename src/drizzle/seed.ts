@@ -1,7 +1,8 @@
 import { NewUser, users } from "./schema";
 import { faker } from "@faker-js/faker";
-import { db } from "./migrate";
+
 import { getHash } from "@/utils/encryption";
+import { db } from "@/utils/db";
 
 const genPassCodeHash = async (params: string[]) =>
   Promise.all(params.map((p) => getHash(p)));
