@@ -10,10 +10,8 @@ import {
 import { createInsertSchema, createSelectSchema } from "drizzle-valibot";
 import { number, parse, string } from "valibot";
 
-export const dbSchema = pgSchema("bun");
-
-export const users = dbSchema.table(
-  "users",
+export const users = pgTable(
+  "pg_users",
   {
     id: serial("id").primaryKey(),
     password: varchar("password").notNull(),
