@@ -1,12 +1,12 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "fc0f8a78-aa07-4586-a380-183330539d85",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "efd8e818-372f-43d8-86ea-16330d66935a",
+  "prevId": "fc0f8a78-aa07-4586-a380-183330539d85",
   "tables": {
     "pg_users": {
       "name": "pg_users",
-      "schema": "",
+      "schema": "bun-hono",
       "columns": {
         "id": {
           "name": "id",
